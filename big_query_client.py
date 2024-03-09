@@ -40,6 +40,6 @@ def get_movies_like(title, client, language=None, genre=None, min_rating=None, r
         # Assuming genres are stored as a delimited string, we split them here for the Movie object
         genres = row.genres.split('|') if row.genres else []
         poster_url, overview, runtime = get_info_from_id(row.tmdbId)
-        movies.append(Movie(row.title, row.average_rating, poster_url, genres, overview, runtime))
+        movies.append(Movie(row.title, row.tmdbId,row.average_rating, poster_url, genres, overview, runtime))
         movies_df.append({'Title': row.title, 'MovieId': row.tmdbId, 'Rating': row.average_rating, 'Genres': row.genres})
     return pd.DataFrame(movies_df), movies

@@ -27,3 +27,19 @@ def get_info_from_id(movie_id: int):
         full_poster_url = "https://cdn-icons-png.flaticon.com/512/2748/2748558.png"
     
     return full_poster_url, movie_data['overview'], movie_data['runtime']
+
+def get_video_from_id(movie_id: int):
+    url = f"https://api.themoviedb.org/3/movie/{movie_id}/videos?language=en-US"
+    headers = {
+        "accept": "application/json",
+        "Authorization": "Bearer " + API_KEY,
+    }
+
+    response = requests.get(url, headers=headers)
+    video_data = json.loads(response.text)
+
+    if 'results' in video_data and video_data['results']:
+        key = video_data['results'][0]['key']
+        return f"https://www.youtube.com/watch?v={key}"
+    
+    return None

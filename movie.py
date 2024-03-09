@@ -1,6 +1,7 @@
 class Movie:
-    def __init__(self, title, rating, posterUrl, genres, overview, runtime):
+    def __init__(self, title, tmdbId, rating, posterUrl, genres, overview, runtime):
         self.title = title
+        self.tmdbId = tmdbId
         self.rating = rating
         self.genres = genres
         self.posterUrl = posterUrl

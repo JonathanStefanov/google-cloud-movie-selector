@@ -1,8 +1,9 @@
 import streamlit as st
 from movie import Movie  # Ensure this import is correctly pointing to your Movie class file
+from movie_page import movie_page
 import math
 
-def create_grid(total_tiles, movies, height_per_tile=300):
+def create_grid(total_tiles: int, movies: Movie, height_per_tile=300):
     """
     Create a grid layout with a specified number of tiles, displaying movie posters, titles, and ratings using star emojis.
 
@@ -11,29 +12,29 @@ def create_grid(total_tiles, movies, height_per_tile=300):
     - movies: list, a list of Movie objects. This list should have at least 'total_tiles' elements.
     - height_per_tile: int, height of each tile in pixels.
     """
-    rows_needed = total_tiles // 3  # Number of full rows
-    extra_tiles = total_tiles % 3  # Tiles in the last row, if any
+    
+    def create_tile(movie, col):
+        """Create a tile for a movie."""
+        rating_stars = "⭐️" * math.floor(movie.rating)  # Convert rating to floor integer and then to stars
+        tile = col.container()
+        tile.image(movie.posterUrl, caption=f"{movie.title} ({rating_stars})", width=200)  # Adjust width as needed
+        click = tile.button("More info", key=movie.title)
+        if click:
+            movie_page(movie)
 
-    tile_index = 0  # Keep track of which tile we're on, to match with the corresponding movie
+    tiles_per_row = 3
+    total_rows = (total_tiles + tiles_per_row - 1) // tiles_per_row  # Calculates the total number of rows needed, rounding up
 
-    # Generate full rows
-    for _ in range(rows_needed):
-        row = st.columns(3)  # Create a row with 3 columns
+    tile_index = 0  # Keep track of which tile we're on
+
+    # Generate rows and tiles
+    for _ in range(total_rows):
+        # Determine the number of columns for the current row (it may be less than tiles_per_row for the last row)
+        cols_in_row = tiles_per_row if (total_tiles - tile_index) >= tiles_per_row else (total_tiles - tile_index) % tiles_per_row
+        row = st.columns(cols_in_row)
+        
         for col in row:
-            if movies and tile_index < len(movies):
-                movie = movies[tile_index]
-                rating_stars = "⭐️" * math.floor(movie.rating)  # Convert rating to floor integer and then to stars
-                tile = col.container()
-                tile.image(movie.posterUrl, caption=f"{movie.title} ({rating_stars})", width=200)  # Adjust width as needed
+            if tile_index < len(movies):
+                create_tile(movies[tile_index], col)
                 tile_index += 1
 
-    # Generate the last row, if there are extra tiles
-    if extra_tiles > 0:
-        last_row = st.columns(extra_tiles)  # Create a row for the remaining tiles
-        for col in last_row:
-            if movies and tile_index < len(movies):
-                movie = movies[tile_index]
-                rating_stars = "⭐️" * math.floor(movie.rating)  # Convert rating to floor integer and then to stars
-                tile = col.container()
-                tile.image(movie.posterUrl, caption=f"{movie.title} ({rating_stars})", width=200)  # Adjust width as needed
-                tile_index += 1

@@ -4,15 +4,11 @@ from tmdb_client import get_info_from_id
 import streamlit as st
 from google.cloud import bigquery
 
-
-def hash_bigquery_client(client):
-    return 1
-
-
-@st.cache_data(hash_funcs={bigquery.client.Client: hash_bigquery_client}, ttl=24*60*60)
-def get_movies_like(title, client, language=None, genre=None, min_rating=None, release_year=None):
+# lambda function so that the bigquery client alwars returns 1, this way even if it changes id somehow it will still return the same hash and the cache will still work
+@st.cache_data(hash_funcs={bigquery.client.Client: lambda _: 1}, ttl=24*60*60)
+def get_movies_like(title, client, language=None, genre=[], min_rating=None, release_year=None):
     # Sanitizing title for safety. This is a very basic form of sanitization.
-    safe_title = title.replace("'", "\\'").lower()
+    safe_title = title.replace("'", "\\'")
 
     if language == "None":
         language = None
@@ -33,7 +29,8 @@ def get_movies_like(title, client, language=None, genre=None, min_rating=None, r
     if language:
         query_parts.append(f"AND m.language = '{language}'")
     if genre:
-        query_parts.append(f"AND m.genres LIKE '%{genre}%'")
+        genres_condition = " OR ".join(f"m.genres LIKE '%{g}%'" for g in genre)
+        query_parts.append(f"AND ({genres_condition})")
     if release_year:
         query_parts.append(f"AND m.release_year > {release_year}")
     # Include m.genres in GROUP BY clause
@@ -57,7 +54,7 @@ def get_movies_like(title, client, language=None, genre=None, min_rating=None, r
         movies.append(Movie(row.title, row.tmdbId,row.average_rating, poster_url, genres, overview, runtime))
     return movies
 
-@st.cache_data(hash_funcs={bigquery.client.Client: hash_bigquery_client}, ttl=24*60*60)
+@st.cache_data(hash_funcs={bigquery.client.Client: lambda _: 1}, ttl=24*60*60)
 def get_all_languages(client):
     query = "SELECT DISTINCT language FROM `assignment1-416415.moviesdata.movies`"
     query_job = client.query(query)
@@ -66,7 +63,7 @@ def get_all_languages(client):
     languages.extend(row.language for row in results if row.language)
     return languages
 
-@st.cache_data(hash_funcs={bigquery.client.Client: hash_bigquery_client}, ttl=24*60*60)
+@st.cache_data(hash_funcs={bigquery.client.Client: lambda _: 1}, ttl=24*60*60)
 def get_all_genres(client):
     query = "SELECT DISTINCT genres FROM `assignment1-416415.moviesdata.movies`"
     query_job = client.query(query)

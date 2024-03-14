@@ -32,7 +32,7 @@ def get_movies_like(title, client, language=None, genre=[], min_rating=None, rel
         genres_condition = " OR ".join(f"m.genres LIKE '%{g}%'" for g in genre)
         query_parts.append(f"AND ({genres_condition})")
     if release_year:
-        query_parts.append(f"AND m.release_year > {release_year}")
+        query_parts.append(f"AND m.release_year > {release_year[0]} AND m.release_year < {release_year[1]}")
     # Include m.genres in GROUP BY clause
     query_parts.append("GROUP BY m.title, m.tmdbId, m.genres")
     if min_rating:

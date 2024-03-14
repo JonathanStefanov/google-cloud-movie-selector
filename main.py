@@ -28,7 +28,7 @@ def main():
 
     # Additional filter options
     rating_filter = st.slider("Minimum rating", 0.0, 5.0, 3.0, 0.1)
-    year_filter = st.slider("Release year after", 1900, 2023, 2000)
+    year_filter = st.slider("Release year after", 1891, 2023, [2010, 2020])
     language_filter = st.selectbox("Language", get_all_languages(client), index=0)
     genre_filter = st.multiselect("Genre", get_all_genres(client))
 

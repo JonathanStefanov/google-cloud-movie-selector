@@ -1,5 +1,6 @@
 import requests
 import os
+from typing import Union
 
 class Movie:
     """
@@ -35,7 +36,7 @@ class Movie:
         """
         return self.title
     
-    def get_video_url(self):
+    def get_video_url(self) -> Union[str, None]:
         """
         Fetches the URL for the movie's first video (e.g., a trailer) on YouTube.
         

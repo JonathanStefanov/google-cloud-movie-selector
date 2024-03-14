@@ -3,10 +3,11 @@ from movie import Movie
 from tmdb_client import get_info_from_id
 import streamlit as st
 from google.cloud import bigquery
+from typing import List
 
 # lambda function so that the bigquery client alwars returns 1, this way even if it changes id somehow it will still return the same hash and the cache will still work
 @st.cache_data(hash_funcs={bigquery.client.Client: lambda _: 1}, ttl=24*60*60)
-def get_movies_like(title, client, language=None, genre=[], min_rating=None, release_year=None):
+def get_movies_like(title: str, client: bigquery.Client, language=None, genre=[], min_rating=None, release_year=None) -> List[Movie]:
     # Sanitizing title for safety. This is a very basic form of sanitization.
     safe_title = title.replace("'", "\\'")
 
@@ -55,7 +56,7 @@ def get_movies_like(title, client, language=None, genre=[], min_rating=None, rel
     return movies
 
 @st.cache_data(hash_funcs={bigquery.client.Client: lambda _: 1}, ttl=24*60*60)
-def get_all_languages(client):
+def get_all_languages(client: bigquery.Client) -> List[str]:
     query = "SELECT DISTINCT language FROM `assignment1-416415.moviesdata.movies`"
     query_job = client.query(query)
     results = query_job.result()  # Wait for the job to complete.
@@ -64,7 +65,7 @@ def get_all_languages(client):
     return languages
 
 @st.cache_data(hash_funcs={bigquery.client.Client: lambda _: 1}, ttl=24*60*60)
-def get_all_genres(client):
+def get_all_genres(client: bigquery.Client) -> List[str]:
     query = "SELECT DISTINCT genres FROM `assignment1-416415.moviesdata.movies`"
     query_job = client.query(query)
     results = query_job.result()
@@ -72,7 +73,6 @@ def get_all_genres(client):
     for row in results:
         if row.genres:
             genres.update(row.genres.split('|'))
-    genres_list = ["None"]  # Prepend "None" to the list of genres
-    genres_list.extend(sorted(genres))
-    return genres_list
+
+    return genres
 

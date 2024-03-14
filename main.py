@@ -6,7 +6,7 @@ from big_query_client import get_movies_like, get_all_genres, get_all_languages
 from grid import display_movies
 
 # Initializes BigQuery client with credentials
-def setup_bigquery_client():
+def setup_bigquery_client() -> bigquery.Client:
     """
     Sets up and returns a BigQuery client using credentials from a service account file.
     """

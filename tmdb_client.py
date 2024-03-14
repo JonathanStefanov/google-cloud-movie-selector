@@ -7,7 +7,7 @@ API_KEY = os.environ.get('TMDB_API_KEY', '')
 # Base URL for fetching movie details from TMDB
 base_url = "https://api.themoviedb.org/3/movie/{}?language=en-US"
 
-def get_info_from_id(movie_id: int):
+def get_info_from_id(movie_id: int) -> tuple:
     """
     Fetches movie information by ID from The Movie Database (TMDB).
     

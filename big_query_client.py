@@ -4,6 +4,18 @@ from tmdb_client import get_info_from_id
 import streamlit as st
 from google.cloud import bigquery
 from typing import List
+from google.oauth2 import service_account
+
+
+# Initializes BigQuery client with credentials
+def setup_bigquery_client() -> bigquery.Client:
+    """
+    Sets up and returns a BigQuery client using credentials from a service account file.
+    """
+    credentials = service_account.Credentials.from_service_account_file('./key.json')
+    project_id = 'assignment1-416415'
+    return bigquery.Client(credentials=credentials, project=project_id)
+
 
 # lambda function so that the bigquery client alwars returns 1, this way even if it changes id somehow it will still return the same hash and the cache will still work
 @st.cache_data(hash_funcs={bigquery.client.Client: lambda _: 1}, ttl=24*60*60)

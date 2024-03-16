@@ -1,18 +1,10 @@
 import streamlit as st
 import pandas as pd
 from google.cloud import bigquery
-from google.oauth2 import service_account
 from big_query_client import get_movies_like, get_all_genres, get_all_languages
 from grid import display_movies
+from big_query_client import setup_bigquery_client
 
-# Initializes BigQuery client with credentials
-def setup_bigquery_client() -> bigquery.Client:
-    """
-    Sets up and returns a BigQuery client using credentials from a service account file.
-    """
-    credentials = service_account.Credentials.from_service_account_file('./key.json')
-    project_id = 'assignment1-416415'
-    return bigquery.Client(credentials=credentials, project=project_id)
 
 def main():
     """
@@ -21,7 +13,7 @@ def main():
     client = setup_bigquery_client()
 
     # Streamlit UI setup
-    st.title("Movie Title Autocomplete")
+    st.title("Google Cloud Movie Visualizer")
 
     # Input from the user for the movie title
     user_input = st.text_input("Type a movie title and press enter", "")

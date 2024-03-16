@@ -2,6 +2,9 @@
 
 Welcome to the Movie Visualiser app, the ultimate tool for movie enthusiasts! Dive into a vast ocean of films and find your next favorite flick in just a few clicks.
 
+[Access App](https://movie-visualizer-bz4aqyjydq-oa.a.run.app/)
+
+
 ## Features
 
 - **Auto-complete Functionality**: Just start typing, and our app will suggest movie titles instantly. 🧠💡

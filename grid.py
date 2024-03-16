@@ -22,6 +22,7 @@ def display_movies(movies: Movie, height_per_tile=300):
         if click:
             movie_page(movie)
 
+
     total_tiles = len(movies)
     tiles_per_row = 3
     total_rows = (total_tiles + tiles_per_row - 1) // tiles_per_row  # Calculates the total number of rows needed, rounding up

@@ -19,8 +19,8 @@ def setup_bigquery_client() -> bigquery.Client:
 
 # lambda function so that the bigquery client alwars returns 1, this way even if it changes id somehow it will still return the same hash and the cache will still work
 @st.cache_data(hash_funcs={bigquery.client.Client: lambda _: 1}, ttl=24*60*60)
-def get_movies_like(title: str, client: bigquery.Client, language=None, genre=[], min_rating=None, release_year=None) -> List[Movie]:
-    # Sanitizing title for safety. This is a very basic form of sanitization.
+def get_movies_like(client: bigquery.Client, title: str= None, language=None, genre=[], min_rating=None, release_year=None) -> List[Movie]:
+    # Sanitizing title for safety.
     safe_title = title.replace("'", "\\'")
 
     if language == "None":
@@ -34,11 +34,12 @@ def get_movies_like(title: str, client: bigquery.Client, language=None, genre=[]
         "SELECT m.title, m.tmdbId, m.genres, AVG(r.rating) as average_rating",
         "FROM `assignment1-416415.moviesdata.movies` m",
         "INNER JOIN `assignment1-416415.moviesdata.ratings` r ON m.movieId = r.movieId",
-        f"WHERE LOWER(m.title) LIKE '{safe_title}%'"
     ]
     # TODO: Make sure %{safe_title}% or just {safe_title}% search/autocomplete
     
     # Adding filters
+    if title:
+        query_parts.append(f"WHERE m.title LIKE '%{safe_title}%'")
     if language:
         query_parts.append(f"AND m.language = '{language}'")
     if genre:

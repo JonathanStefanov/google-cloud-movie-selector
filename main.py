@@ -25,16 +25,15 @@ def main():
     genre_filter = st.multiselect("Genre", get_all_genres(client))
 
     # Display movies based on the filters
-    if user_input:
-        user_input = user_input.lower()
-        movies = get_movies_like(title=user_input, client=client, language=language_filter if language_filter else None, 
-                                 genre=genre_filter if genre_filter else [], min_rating=rating_filter if rating_filter else None, 
-                                 release_year=year_filter if year_filter else None)
-        
-        if not movies:
-            st.write("No movies found.")
-        else:
-            display_movies(movies)
+    user_input = user_input.lower()
+    movies = get_movies_like(title=user_input, client=client, language=language_filter if language_filter else None, 
+                                genre=genre_filter if genre_filter else [], min_rating=rating_filter if rating_filter else None, 
+                                release_year=year_filter if year_filter else None)
+    
+    if not movies:
+        st.write("No movies found.")
+    else:
+        display_movies(movies)
 
 if __name__ == "__main__":
     main()

@@ -24,3 +24,18 @@ Welcome to the Movie Visualiser app, the ultimate tool for movie enthusiasts! Di
 - **Google BigQuery**: Our backend is powered by BigQuery for handling massive datasets with ease. 🗄️🚀
 - **Google Cloud Run**: The app is hosted on Google Cloud Run for a fully managed, serverless experience. ☁️✨
 - **The Movie Database (TMDB) API**: We enrich our movie data with additional details fetched from the TMDB API. 🎞️📊
+
+## File Explanation
+- **streamlit_app.py**: The main script that uses Streamlit to create the web interface. It integrates all other components, handling user input and displaying search results and detailed movie pages.
+
+- **movie.py**: Defines the `Movie` class, representing a movie with attributes like title, TMDB ID, rating, poster URL, genres, overview, and runtime. It also includes a method to fetch video URLs (e.g., trailers) from TMDB.
+
+- **tmdb_client.py**: Contains functions to interact with The Movie Database (TMDB) API. It fetches additional movie details like poster URLs, overviews, and runtimes using the TMDB API, enriching the data obtained from BigQuery.
+
+- **grid.py**: Utilizes Streamlit to display search results in a grid layout. Each grid tile shows a movie's poster, title, rating in stars, and includes a "More info" button for accessing detailed information.
+
+- **movie_page.py**: Renders a detailed view of a selected movie. This page displays the movie's title, rating, genres, summary, runtime, and a video preview (if available) using information fetched from TMDB.
+
+- **utils.py**: Provides additional utility functions for the app, like creating a grid layout for movie tiles. This file might contain common functions used across different parts of the app to avoid code duplication.
+
+- **big_query_client.py**: Handles communication with Google Cloud's BigQuery. It includes functions for setting up the BigQuery client, querying movies based on user input and selected filters, and fetching lists of available languages and genres from the dataset.

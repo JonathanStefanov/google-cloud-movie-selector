@@ -52,7 +52,7 @@ def get_movies_like(client: bigquery.Client, title = None, language=None, genre=
     if min_rating:
         query_parts.append(f"HAVING AVG(r.rating) > {min_rating}")
     query_parts.append("ORDER BY average_rating DESC")
-    query_parts.append("LIMIT 50;")
+    query_parts.append("LIMIT 30;")
     
     query = " ".join(query_parts)
     

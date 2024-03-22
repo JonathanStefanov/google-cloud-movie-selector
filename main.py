@@ -34,6 +34,5 @@ def main():
         st.write("No movies found.")
     else:
         display_movies(movies)
-
 if __name__ == "__main__":
     main()

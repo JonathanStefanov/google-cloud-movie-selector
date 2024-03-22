@@ -19,11 +19,11 @@ def setup_bigquery_client() -> bigquery.Client:
 
 # lambda function so that the bigquery client alwars returns 1, this way even if it changes id somehow it will still return the same hash and the cache will still work
 @st.cache_data(hash_funcs={bigquery.client.Client: lambda _: 1}, ttl=24*60*60)
-def get_movies_like(client: bigquery.Client, title: str= None, language=None, genre=[], min_rating=None, release_year=None) -> List[Movie]:
-    # Sanitizing title for safety.
+def get_movies_like(client: bigquery.Client, title = None, language=None, genre=[], min_rating=None, release_year=None) -> List[Movie]:
+    # Sanitizing title for safety. This is a very basic form of sanitization.
     safe_title = title.replace("'", "\\'")
 
-    if language == "None":
+    if language == "Any":
         language = None
     if genre == "None":
         genre = None
@@ -39,7 +39,7 @@ def get_movies_like(client: bigquery.Client, title: str= None, language=None, ge
     
     # Adding filters
     if title:
-        query_parts.append(f"WHERE m.title LIKE '%{safe_title}%'")
+        query_parts.append(f"WHERE LOWER(m.title) LIKE '{safe_title}%'")
     if language:
         query_parts.append(f"AND m.language = '{language}'")
     if genre:
@@ -73,7 +73,7 @@ def get_all_languages(client: bigquery.Client) -> List[str]:
     query = "SELECT DISTINCT language FROM `assignment1-416415.moviesdata.movies`"
     query_job = client.query(query)
     results = query_job.result()  # Wait for the job to complete.
-    languages = ["None"]  # Prepend "None" to the list of languages
+    languages = ["Any"]  # Prepend "None" to the list of languages
     languages.extend(row.language for row in results if row.language)
     return languages
 

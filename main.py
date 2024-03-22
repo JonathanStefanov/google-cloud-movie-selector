@@ -33,7 +33,6 @@ def main():
     if not movies:
         st.write("No movies found.")
     else:
-            display_movies(movies)
-
+        display_movies(movies)
 if __name__ == "__main__":
     main()
